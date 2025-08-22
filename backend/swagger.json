@@ -1,0 +1,321 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "NGO Crowdfunding API",
+    "description": "API documentation for NGO Crowdfunding platform backend",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserRegister": {
+        "type": "object",
+        "required": ["email", "password", "name"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "format": "password" },
+          "name": { "type": "string" }
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "64d3d3239b9f4d4d6fabc123" },
+          "email": { "type": "string" },
+          "name": { "type": "string" },
+          "role": { "type": "string", "enum": ["user", "admin"] },
+          "token": { "type": "string", "description": "JWT access token" }
+        }
+      },
+      "PlanCreate": {
+        "type": "object",
+        "required": ["name", "amount", "interval", "limit"],
+        "properties": {
+          "name": { "type": "string", "example": "$1/month" },
+          "amount": {
+            "type": "integer",
+            "example": 100,
+            "description": "Amount in cents/paisa"
+          },
+          "interval": {
+            "type": "string",
+            "example": "month",
+            "enum": ["month", "quarter", "halfyear", "year"]
+          },
+          "limit": {
+            "type": "integer",
+            "example": 1000,
+            "description": "Max number of subscribers or max amount"
+          }
+        }
+      },
+      "PlanResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "amount": { "type": "integer" },
+          "interval": { "type": "string" },
+          "limit": { "type": "integer" },
+          "isActive": { "type": "boolean" }
+        }
+      },
+      "SubscriptionCreate": {
+        "type": "object",
+        "required": [
+          "userId",
+          "planId",
+          "userName",
+          "customerEmail",
+          "paymentMethod"
+        ],
+        "properties": {
+          "userId": { "type": "string", "example": "64d3d3239b9f4d4d6fabc123" },
+          "planId": { "type": "string", "example": "64d3d4a09b9f4d4d6fabc125" },
+          "userName": { "type": "string" },
+          "customerEmail": { "type": "string", "format": "email" },
+          "paymentMethod": { "type": "string", "example": "card" }
+        }
+      },
+      "SubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "planId": { "type": "string" },
+          "stripeSubscriptionId": {
+            "type": "string",
+            "example": "dummy-subscription-id"
+          },
+          "nextPaymentDate": { "type": "string", "format": "date-time" },
+          "status": { "type": "string", "enum": ["active", "cancelled"] }
+        }
+      },
+      "AnalyticsResponse": {
+        "type": "object",
+        "properties": {
+          "totalFundsRaised": { "type": "integer", "example": 250000 },
+          "activeFundingPlans": { "type": "integer", "example": 3 },
+          "totalDonors": { "type": "integer", "example": 120 }
+        }
+      }
+    }
+  },
+  "security": [{ "BearerAuth": [] }],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "summary": "Register new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserRegister" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "400": { "description": "Validation error" }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "User login and get JWT tokens",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserLogin" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login success",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/users/refresh-token": {
+      "post": {
+        "summary": "Get new access token using refresh token",
+        "responses": {
+          "200": {
+            "description": "Access token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid refresh token" }
+        }
+      }
+    },
+    "/plans": {
+      "get": {
+        "summary": "Get all funding plans",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PlanResponse" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Admin create a new funding plan",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PlanCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Plan created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PlanResponse" }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/subscriptions": {
+      "post": {
+        "summary": "Create new subscription (user subscribes to funding plan)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SubscriptionCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription created/active",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "400": { "description": "Validation error or payment failure" }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/cancel": {
+      "patch": {
+        "summary": "Cancel a subscription",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Subscription cancelled" },
+          "404": { "description": "Subscription not found" }
+        }
+      }
+    },
+    "/notifications/queue-stats": {
+      "get": {
+        "summary": "Get notification queue job analytics",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Queue stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalJobs": { "type": "integer" },
+                    "completedJobs": { "type": "integer" },
+                    "failedJobs": { "type": "integer" },
+                    "activeJobs": { "type": "integer" },
+                    "waitingJobs": { "type": "integer" },
+                    "averageProcessingTimeMs": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/dashboard-stats": {
+      "get": {
+        "summary": "Get public analytics stats: total funds, donors count, active plans",
+        "responses": {
+          "200": {
+            "description": "Public analytics data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AnalyticsResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
