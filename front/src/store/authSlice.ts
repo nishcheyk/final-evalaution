@@ -1,3 +1,4 @@
+// src/store/authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
@@ -5,6 +6,8 @@ interface User {
   email: string;
   role: "admin" | "user";
   token: string;
+  userName?: string;
+  customerEmail?: string;
 }
 
 interface AuthState {

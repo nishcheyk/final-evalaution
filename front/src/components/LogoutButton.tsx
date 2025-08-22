@@ -9,7 +9,7 @@ const LogoutButton = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("token"); // if you store token locally
+    localStorage.removeItem("token");
     navigate("/login", { replace: true });
   };
 

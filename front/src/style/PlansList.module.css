@@ -1,0 +1,81 @@
+.container {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #172a45;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #0f62fe;
+  user-select: none;
+}
+
+.noPlans {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.planCard {
+  background: #f9fafb;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  cursor: pointer;
+}
+
+.planCard:hover {
+  box-shadow: 0 10px 28px rgba(15, 98, 254, 0.15);
+  transform: translateY(-5px);
+}
+
+.planName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f62fe;
+  margin-bottom: 18px;
+}
+
+.planDetail {
+  font-size: 1.1rem;
+  color: #444c61;
+  margin-bottom: 14px;
+}
+
+.subscribeLink {
+  align-self: flex-start;
+  padding: 10px 20px;
+  border-radius: 36px;
+  font-weight: 700;
+  font-size: 1rem;
+  background-color: #0f62fe;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(15, 98, 254, 0.5);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  user-select: none;
+}
+
+.subscribeLink:hover {
+  background-color: #054bcf;
+  box-shadow: 0 10px 30px rgba(5, 75, 207, 0.7);
+}

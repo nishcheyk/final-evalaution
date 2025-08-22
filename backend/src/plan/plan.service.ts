@@ -24,3 +24,21 @@ export async function updatePlanAmount(planId: string, amount: number) {
 
   return plan.save();
 }
+
+/**
+ * Sets isActive flag for soft delete/deactivation
+ */
+export async function deactivatePlan(planId: string) {
+  const plan = await Plan.findById(planId);
+  if (!plan) throw new Error("Plan not found");
+
+  plan.isActive = false;
+  return plan.save();
+}
+
+export async function reactivatePlan(planId: string) {
+  const plan = await Plan.findById(planId);
+  if (!plan) throw new Error("Plan not found");
+  plan.isActive = true;
+  return plan.save();
+}

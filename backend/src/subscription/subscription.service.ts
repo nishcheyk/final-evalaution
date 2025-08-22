@@ -1,90 +1,53 @@
-import { Subscription } from "./subscription.schema";
-import { Plan } from "../plan/plan.schema";
-import notificationQueue from "../notification/notification.queue";
-import {
-  processDummyPayment,
-  PaymentStatus,
-} from "../dummypayment/dummyPayment.service";
-import * as planService from "../plan/plan.service";
+import { Subscription, ISubscription } from "./subscription.schema";
+import { Types } from "mongoose";
 
-export async function createSubscription(data: {
-  userId: string;
-  planId: string;
-  userName: string;
-  customerEmail: string;
-  paymentMethod: string;
-}) {
-  const plan = await Plan.findById(data.planId);
-  if (!plan) throw new Error("Plan not found");
+function generateDummySubscriptionId(): string {
+  return "sub_" + Math.random().toString(36).substring(2, 15);
+}
 
-  // Process first payment immediately
-  const status: PaymentStatus = await processDummyPayment(
-    plan.amount,
-    data.paymentMethod
-  );
-  if (status === "failure") {
-    throw new Error("Payment failed in dummy gateway");
-  }
+export async function findActiveSubscription(
+  userId: string | Types.ObjectId,
+  planId: string | Types.ObjectId
+): Promise<ISubscription | null> {
+  return Subscription.findOne({
+    userId,
+    "plan._id": planId,
+    status: "active",
+  }).exec();
+}
 
-  const now = new Date();
-  const nextPaymentDate = new Date(now);
-  switch (plan.interval) {
-    case "month":
-      nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
-      break;
-    case "quarter":
-      nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 3);
-      break;
-    case "half_year":
-      nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 6);
-      break;
-    default:
-      nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
-  }
+export async function createSubscription(data: any): Promise<ISubscription> {
+  // Generate dummySubscriptionId if not provided
+  const dummySubscriptionId =
+    data.dummySubscriptionId || generateDummySubscriptionId();
 
-  // Create and save subscription document
+  // Calculate nextPaymentDate: set 1 month ahead from now
+  const nextPaymentDate = new Date();
+  nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
+
   const subscription = new Subscription({
     userId: data.userId,
-    planId: data.planId,
-    dummySubscriptionId: "dummy-subscription-id",
+    plan: data.plan,
+    dummySubscriptionId:
+      data.dummySubscriptionId || generateDummySubscriptionId(),
     nextPaymentDate,
     status: "active",
-    createdAt: now,
   });
   await subscription.save();
 
-  // Update the plan's current amount and possibly deactivate it
-  await planService.updatePlanAmount(plan._id.toString(), plan.amount);
-
-  // Schedule notification 1 day before next payment date
-  const reminderDate = new Date(
-    nextPaymentDate.getTime() - 24 * 60 * 60 * 1000
-  );
-  notificationQueue.add(
-    "paymentReminder",
-    {
-      email: data.customerEmail,
-      userName: data.userName,
-      dueDate: nextPaymentDate.toDateString(),
-      planName: plan.name,
-      amount: plan.amount,
-    },
-    { delay: reminderDate.getTime() - Date.now() }
-  );
-
-  return subscription;
+  return subscription.save();
 }
 
-export async function getUserSubscriptions(userId: string) {
-  return Subscription.find({ userId, status: "active" }).populate("planId");
+export async function getUserSubscriptions(
+  userId: string | Types.ObjectId
+): Promise<ISubscription[]> {
+  return Subscription.find({ userId }).populate("plan").exec();
 }
 
-export async function cancelSubscription(subscriptionId: string) {
-  const subscription = await Subscription.findById(subscriptionId);
-  if (!subscription) throw new Error("Subscription not found");
-
-  subscription.status = "cancelled";
-  await subscription.save();
-
-  return subscription;
+export async function cancelSubscription(
+  subscriptionId: string | Types.ObjectId
+): Promise<void> {
+  await Subscription.findByIdAndUpdate(subscriptionId, {
+    status: "cancelled",
+  }).exec();
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetPlansQuery } from "../../services/apiSlice";
 import { Link } from "react-router-dom";
+import styles from "../../style/PlansList.module.css"; // Create this CSS module
 
 const PlansList = () => {
   const { data: plans = [], isLoading, error } = useGetPlansQuery();
@@ -9,30 +10,33 @@ const PlansList = () => {
   if (error) return <p>Error loading plans.</p>;
 
   return (
-    <div style={{ maxWidth: 700, margin: "auto", padding: 20 }}>
-      <h2>Available Funding Plans</h2>
-      {plans.length === 0 && <p>No active plans at the moment.</p>}
-      {plans.map(
-        (plan) =>
-          plan.isActive && (
-            <div
-              key={plan.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: 15,
-                marginBottom: 10,
-              }}
-            >
-              <h3>{plan.name}</h3>
-              <p>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Available Funding Plans</h2>
+      {plans.length === 0 && (
+        <p className={styles.noPlans}>No active plans at the moment.</p>
+      )}
+      <div className={styles.plansGrid}>
+        {plans
+          .filter((plan) => plan.isActive)
+          .map((plan) => (
+            <div key={plan._id} className={styles.planCard}>
+              <h3 className={styles.planName}>{plan.name}</h3>
+              <p className={styles.planDetail}>
                 Recurring Amount: ${(plan.amount / 100).toFixed(2)} per{" "}
                 {plan.interval}
               </p>
-              <p>Goal: ${(plan.goalAmount / 100).toFixed(2)}</p>
-              <Link to={`/user/subscribe/${plan._id}`}>Subscribe</Link>
+              <p className={styles.planDetail}>
+                Goal: ${(plan.goalAmount / 100).toFixed(2)}
+              </p>
+              <Link
+                to={`/user/subscribe/${plan._id}`}
+                className={styles.subscribeLink}
+              >
+                Subscribe
+              </Link>
             </div>
-          )
-      )}
+          ))}
+      </div>
     </div>
   );
 };

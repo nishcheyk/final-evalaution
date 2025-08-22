@@ -18,11 +18,11 @@ const collapsedWidth = 60;
 
 const UserLayout = () => {
   const [open, setOpen] = useState(false);
-
   const menuItems = [
     { to: "dashboard", label: "Dashboard" },
     { to: "plans", label: "Plans" },
-    { to: "leaderboard", label: "Leaderboard" },
+
+    { to: "subscriptions", label: "My Subscriptions" },
   ];
 
   return (

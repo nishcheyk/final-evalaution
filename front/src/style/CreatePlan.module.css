@@ -1,0 +1,86 @@
+.container {
+  max-width: 480px;
+  margin: 40px auto;
+  background-color: #fff;
+  padding: 32px 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(15, 98, 254, 0.15);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #243746;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #0f62fe;
+  user-select: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #334e68;
+  user-select: none;
+}
+
+.input,
+.select {
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 1rem;
+  border: 2px solid #d0d7de;
+  transition: border-color 0.3s ease;
+  outline-offset: 2px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus,
+.select:focus {
+  border-color: #0f62fe;
+  outline: none;
+}
+
+.button {
+  margin-top: 10px;
+  padding: 14px 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 36px;
+  border: none;
+  background-color: #0f62fe;
+  color: white;
+  box-shadow: 0 10px 30px rgba(15, 98, 254, 0.5);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.button:disabled {
+  background-color: #93c5fd;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.button:not(:disabled):hover {
+  background-color: #054bcf;
+  box-shadow: 0 12px 35px rgba(5, 75, 207, 0.7);
+}
+
+.errorMessage {
+  color: #da1e28;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 12px;
+  user-select: none;
+}

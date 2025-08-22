@@ -1,0 +1,112 @@
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px 25px;
+  background: #f9fafc;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(15, 98, 254, 0.15);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #243746;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #0f62fe;
+  text-align: center;
+}
+
+.amount {
+  font-size: 1.125rem;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #486581;
+}
+
+.paymentMethodLabel {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  color: #0f62fe;
+}
+
+.selectWrapper {
+  margin-bottom: 25px;
+}
+
+.selectInput {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.selectInput:focus {
+  border-color: #0f62fe;
+  outline: none;
+}
+
+/* Card form inputs container */
+.cardForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputLabel {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #334e68;
+}
+
+.inputField {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1.8px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.inputField:focus {
+  border-color: #0f62fe;
+  outline: none;
+}
+
+/* Button style */
+.subscribeButton {
+  width: 100%;
+  padding: 14px 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 36px;
+  border: none;
+  background: #0f62fe;
+  color: white;
+  box-shadow: 0 8px 25px rgba(15, 98, 254, 0.5);
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  user-select: none;
+}
+
+.subscribeButton:disabled {
+  background-color: #93c5fd;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.subscribeButton:not(:disabled):hover {
+  background-color: #054bcf;
+  box-shadow: 0 10px 30px rgba(5, 75, 207, 0.7);
+}

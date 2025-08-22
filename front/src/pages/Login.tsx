@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useLoginUserMutation } from "../services/apiSlice";
 import { useAppDispatch } from "../store/hooks";
 import { setCredentials } from "../store/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import styles from "../style/Login.module.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +16,6 @@ const Login = () => {
 
   useEffect(() => {
     if (data) {
-      // Dispatch combined user and token to auth slice
       dispatch(setCredentials({ ...data.user, token: data.token }));
       if (data.user.role === "admin") navigate("/admin/create-plan");
       else navigate("/user/dashboard");
@@ -26,45 +28,60 @@ const Login = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ maxWidth: 400, margin: "auto", padding: 20 }}
-    >
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        style={{ width: "100%", marginBottom: 10, padding: 8 }}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        style={{ width: "100%", marginBottom: 10, padding: 8 }}
-      />
-      <button
-        type="submit"
-        disabled={isLoading}
-        style={{
-          width: "100%",
-          padding: 10,
-          backgroundColor: "#0f62fe",
-          color: "white",
-          fontWeight: "bold",
-          border: "none",
-          borderRadius: 4,
-          cursor: isLoading ? "not-allowed" : "pointer",
-        }}
+    <div className={styles.background}>
+      <motion.form
+        onSubmit={handleSubmit}
+        className={styles.container}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        {isLoading ? "Logging in..." : "Login"}
-      </button>
-      {error && <p style={{ color: "red" }}>Login failed</p>}
-    </form>
+        <h2 className={styles.title}>Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className={styles.input}
+          maxLength={64}
+          autoComplete="email"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className={styles.input}
+          maxLength={64}
+          autoComplete="current-password"
+        />
+        <motion.button
+          type="submit"
+          disabled={isLoading}
+          className={styles.button}
+          whileHover={{ scale: isLoading ? 1 : 1.05 }}
+          whileTap={{ scale: isLoading ? 1 : 0.95 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          {isLoading ? "Logging in..." : "Login"}
+        </motion.button>
+        {error && (
+          <motion.p
+            className={styles.errorMessage}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            Login failed
+          </motion.p>
+        )}
+        <Link to="/register" className={styles.registerLink}>
+          Don't have an account? Register here
+        </Link>
+      </motion.form>
+    </div>
   );
 };
 

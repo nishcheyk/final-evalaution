@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRegisterUserMutation } from "../services/apiSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import styles from "../style/Login.module.css"; // Reusing Login styles
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -40,48 +43,83 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <h2>Register</h2>
-      <input
-        name="name"
-        placeholder="Name"
-        value={name}
-        onChange={onChange}
-        required
-      />
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={onChange}
-        required
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={onChange}
-        required
-      />
-      <input
-        name="confirmPassword"
-        type="password"
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChange={onChange}
-        required
-      />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Registering..." : "Register"}
-      </button>
-      {error && (
-        <p style={{ color: "red" }}>
-          {(error as any).data?.message || "Registration failed"}
-        </p>
-      )}
-    </form>
+    <div className={styles.background}>
+      <motion.form
+        onSubmit={onSubmit}
+        className={styles.container}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <h2 className={styles.title}>Register</h2>
+        <input
+          name="name"
+          placeholder="Name"
+          value={name}
+          onChange={onChange}
+          required
+          className={styles.input}
+          maxLength={64}
+          autoComplete="name"
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={onChange}
+          required
+          className={styles.input}
+          maxLength={64}
+          autoComplete="email"
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={onChange}
+          required
+          className={styles.input}
+          maxLength={64}
+          autoComplete="new-password"
+        />
+        <input
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={onChange}
+          required
+          className={styles.input}
+          maxLength={64}
+          autoComplete="new-password"
+        />
+        <motion.button
+          type="submit"
+          disabled={isLoading}
+          className={styles.button}
+          whileHover={{ scale: isLoading ? 1 : 1.05 }}
+          whileTap={{ scale: isLoading ? 1 : 0.95 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          {isLoading ? "Registering..." : "Register"}
+        </motion.button>
+        {error && (
+          <motion.p
+            className={styles.errorMessage}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {(error as any).data?.message || "Registration failed"}
+          </motion.p>
+        )}
+        <Link to="/login" className={styles.registerLink}>
+          Already have an account? Login here
+        </Link>
+      </motion.form>
+    </div>
   );
 };
 

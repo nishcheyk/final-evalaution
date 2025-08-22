@@ -11,7 +11,6 @@ export async function processDummyPayment(
   // Simulate async payment processing delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  // Randomly succeed or fail (80% success rate)
   const success = Math.random() > 0.2;
 
   return success ? "success" : "failure";

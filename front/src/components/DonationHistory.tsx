@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetUserSubscriptionsQuery } from "../../services/apiSlice";
+import { useGetUserSubscriptionsQuery } from "../services/apiSlice";
 
 const DonationHistory: React.FC<{ userId: string }> = ({ userId }) => {
   const { data, error, isLoading } = useGetUserSubscriptionsQuery(userId);
@@ -29,7 +29,7 @@ const DonationHistory: React.FC<{ userId: string }> = ({ userId }) => {
               style={{ borderBottom: "1px solid #eee" }}
             >
               <td style={{ padding: 8 }}>
-                {subscription.planId?.name ?? "Unknown Plan"}
+                {subscription.plan?.name ?? "Unknown Plan"}
               </td>
               <td style={{ padding: 8 }}>{subscription.status}</td>
               <td style={{ padding: 8 }}>

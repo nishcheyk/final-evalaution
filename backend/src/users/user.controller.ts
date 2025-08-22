@@ -12,7 +12,6 @@ export async function register(req: Request, res: Response) {
 
   const user = await createUser(email, password);
 
-  // Return user data with token
   const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
     expiresIn: "1d",
   });
@@ -22,6 +21,8 @@ export async function register(req: Request, res: Response) {
       _id: user._id,
       email: user.email,
       role: user.role,
+      userName: user.email, // add userName
+      customerEmail: user.email, // add customerEmail
     },
     token,
   });
@@ -41,6 +42,8 @@ export async function login(req: Request, res: Response) {
       _id: user._id,
       email: user.email,
       role: user.role,
+      userName: user.email, // add userName
+      customerEmail: user.email, // add customerEmail
     },
     token,
   });

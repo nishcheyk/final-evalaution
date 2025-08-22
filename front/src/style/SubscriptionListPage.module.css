@@ -1,0 +1,94 @@
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 98, 254, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #172a45;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #0f62fe;
+  user-select: none;
+  text-align: center;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 8px 20px rgba(15, 98, 254, 0.07);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #d0d7de;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.table th {
+  background-color: #e1e5f2;
+  color: #0f62fe;
+  font-weight: 700;
+  user-select: none;
+}
+
+.row:hover {
+  background-color: #f4f7fd;
+}
+
+.activeStatus {
+  color: #198038;
+  font-weight: 700;
+}
+
+.cancelledStatus {
+  color: #da1e28;
+  font-weight: 700;
+}
+
+.cancelButton {
+  background-color: #da1e28;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  font-size: 0.9rem;
+}
+
+.cancelButton:disabled {
+  background-color: #f3a6a4;
+  cursor: not-allowed;
+}
+
+.cancelButton:not(:disabled):hover {
+  background-color: #a50e16;
+}
+
+.message {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #555;
+  margin-top: 40px;
+  user-select: none;
+}
+
+.error {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #da1e28;
+  margin-top: 40px;
+  user-select: none;
+}
