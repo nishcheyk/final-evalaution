@@ -1,3 +1,4 @@
 .env
 # Ignore all node_modules folders in the project
 node_modules/
+dist
