@@ -1,4 +1,3 @@
-// src/layout/GuestLayout.tsx
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
@@ -8,12 +7,22 @@ import {
   Button,
   Box,
   Container,
+  useTheme,
 } from "@mui/material";
 
 const GuestLayout: React.FC = () => {
+  const theme = useTheme();
+
   return (
     <>
-      <AppBar position="static" color="primary" elevation={3}>
+      <AppBar
+        position="static"
+        color="primary"
+        elevation={4}
+        sx={{
+          background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+        }}
+      >
         <Container maxWidth="lg">
           <Toolbar
             disableGutters
@@ -28,7 +37,9 @@ const GuestLayout: React.FC = () => {
                 textDecoration: "none",
                 color: "inherit",
                 fontWeight: "bold",
-                letterSpacing: 1,
+                letterSpacing: 2,
+                fontSize: "1.5rem",
+                "&:hover": { color: theme.palette.secondary.light },
                 cursor: "pointer",
               }}
             >
@@ -41,7 +52,16 @@ const GuestLayout: React.FC = () => {
                 component={Link}
                 to="/login"
                 color="inherit"
-                sx={{ textTransform: "none", fontWeight: "bold" }}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  mr: 1.5,
+                  fontSize: "1rem",
+                  "&:hover": {
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    borderRadius: "6px",
+                  },
+                }}
               >
                 Login
               </Button>
@@ -51,13 +71,16 @@ const GuestLayout: React.FC = () => {
                 variant="outlined"
                 color="inherit"
                 sx={{
-                  ml: 2,
+                  ml: 1,
                   textTransform: "none",
-                  fontWeight: "bold",
+                  fontWeight: 600,
                   borderColor: "white",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  paddingX: 2,
                   "&:hover": {
-                    borderColor: "white",
-                    backgroundColor: "rgba(255,255,255,0.1)",
+                    borderColor: theme.palette.secondary.light,
+                    backgroundColor: "rgba(255,255,255,0.15)",
                   },
                 }}
               >
@@ -71,7 +94,15 @@ const GuestLayout: React.FC = () => {
       {/* Page content container */}
       <Container
         maxWidth="md"
-        sx={{ mt: 4, mb: 4, minHeight: "calc(100vh - 64px)" }}
+        sx={{
+          mt: 6,
+          mb: 6,
+          minHeight: "calc(100vh - 64px)",
+          boxShadow: 3,
+          borderRadius: 3,
+          padding: 4,
+          bgcolor: "background.paper",
+        }}
       >
         <Outlet />
       </Container>

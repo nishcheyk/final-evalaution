@@ -2,6 +2,21 @@ import { Request, Response } from "express";
 import * as subscriptionService from "./subscription.service";
 import notificationQueue from "../notification/notification.queue";
 
+/**
+ * Create a new subscription.
+ * Validates request body, ensures no duplicate active subscription,
+ * creates subscription, and schedules notifications.
+ *
+ * @async
+ * @param {Request} req - Express request object. Expects body with:
+ *   - userId {string} required
+ *   - plan {object} with _id required
+ *   - userName {string} required
+ *   - customerEmail {string} required
+ *   - paymentMethod {string} required
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} JSON of created subscription with 201 status or error details.
+ */
 export async function createSubscription(req: Request, res: Response) {
   try {
     const { userId, plan, userName, customerEmail, paymentMethod } = req.body;
@@ -29,10 +44,8 @@ export async function createSubscription(req: Request, res: Response) {
       });
     }
 
-    // Create the subscription (dummySubscriptionId will be generated inside service)
     const subscription = await subscriptionService.createSubscription(req.body);
 
-    // Immediately enqueue payment success notification
     await notificationQueue.add({
       type: "paymentSuccess",
       data: {
@@ -43,7 +56,6 @@ export async function createSubscription(req: Request, res: Response) {
       },
     });
 
-    // Schedule payment reminder 1 day before nextPaymentDate
     const now = new Date();
     const reminderDate = new Date(subscription.nextPaymentDate);
     reminderDate.setDate(reminderDate.getDate() - 1);
@@ -73,6 +85,14 @@ export async function createSubscription(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get active subscriptions for a specific user.
+ *
+ * @async
+ * @param {Request} req - Express request object. Expects userId in params.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} JSON array of active subscriptions or error message.
+ */
 export async function getActiveSubscriptions(req: Request, res: Response) {
   const userId = req.params.userId;
   if (!userId) {
@@ -90,6 +110,14 @@ export async function getActiveSubscriptions(req: Request, res: Response) {
   }
 }
 
+/**
+ * Cancel an existing subscription by its ID.
+ *
+ * @async
+ * @param {Request} req - Express request object. Expects subscriptionId in params.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} JSON success message or error message.
+ */
 export async function cancelSubscription(req: Request, res: Response) {
   const subscriptionId = req.params.subscriptionId;
   if (!subscriptionId) {

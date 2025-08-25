@@ -19,12 +19,13 @@ import {
 import { motion } from "framer-motion";
 
 import styles from "../../style/Dashboard.module.css";
+import LottieLoader from "../../components/Lottie.loader";
 
 const StatCard = ({
   title,
   value,
   colorClass,
-  isCurrency = true, // new prop to control formatting
+  isCurrency = true,
 }: {
   title: string;
   value: number;
@@ -129,16 +130,7 @@ const DonationHistory: React.FC<{ userId: string }> = ({ userId }) => {
   const { data, isLoading, error } = useGetUserSubscriptionsQuery(userId);
 
   if (isLoading) {
-    return (
-      <section className={styles.donationHistorySection}>
-        <h2 className={styles.donationHistoryTitle}>Your Donation History</h2>
-        <div aria-busy="true" aria-label="Loading donation history">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className={styles.skeletonTableRow}></div>
-          ))}
-        </div>
-      </section>
-    );
+    return <LottieLoader />;
   }
 
   if (error) return <p>Error loading donation history.</p>;

@@ -1,327 +1,348 @@
-/* Soft animated gradient background */
+/* Soft animated gradient background with cooler, calm palette */
 .background {
   min-height: 100vh;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #c3cfe2, #e9e4f0, #f0f4f8);
+  padding: 48px 24px;
+  background: linear-gradient(135deg, #d7e3fc, #e7eefc, #f7fafd);
   background-size: 400% 400%;
-  animation: gradientAnimation 20s ease infinite;
+  animation: gradientAnimation 25s ease infinite;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #172a45;
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #213547;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Smooth gradient movement */
 @keyframes gradientAnimation {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 45%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 55%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 45%;
   }
 }
 
-/* Container card for dashboard */
+/* Card container with generous padding and subtle shadow */
 .container {
   width: 100%;
-  max-width: 1200px;
-  background: #fff;
-  border-radius: 20px;
-  padding: 40px 50px;
-  box-shadow:
-    0 10px 15px rgba(20, 33, 72, 0.1),
-    0 4px 6px rgba(20, 33, 72, 0.06);
+  max-width: 1280px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 48px 64px;
+  box-shadow: 0 8px 20px rgba(33, 53, 71, 0.1);
   box-sizing: border-box;
+  color: #213547;
 }
 
-/* Header section */
+/* Header styling for clear hierarchy */
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .headerTitle {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 12px;
+  font-size: 3.4rem;
+  font-weight: 900;
+  margin-bottom: 18px;
   color: #0f62fe;
-  letter-spacing: 1.1px;
+  letter-spacing: 1.3px;
   user-select: none;
 }
 
 .headerSubtitle {
-  font-size: 1.25rem;
-  max-width: 660px;
-  margin: 0 auto 25px auto;
-  color: #4a5a7b;
+  font-size: 1.4rem;
+  max-width: 700px;
+  margin: 0 auto 32px auto;
+  color: #576f86;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
+/* Call-to-action button with smooth and tactile feedback */
 .ctaButton {
-  padding: 14px 36px;
-  border-radius: 30px;
+  padding: 16px 44px;
+  border-radius: 28px;
   border: none;
   background-color: #0f62fe;
   color: white;
-  font-size: 1.125rem;
+  font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(15, 98, 254, 0.5);
+  box-shadow: 0 5px 16px rgba(15, 98, 254, 0.35);
   transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.25s ease;
   user-select: none;
 }
 
 .ctaButton:hover {
   background-color: #054bcf;
-  box-shadow: 0 6px 28px rgba(5, 75, 207, 0.7);
+  box-shadow: 0 8px 24px rgba(5, 75, 207, 0.45);
+  transform: translateY(-3px);
 }
 
-/* Stats Section */
+/* Stats Section flex grid with spacing */
 .statsSection {
   display: flex;
   justify-content: center;
-  gap: 32px;
+  gap: 36px;
   flex-wrap: wrap;
-  margin-bottom: 50px;
+  margin-bottom: 64px;
 }
 
+/* Stat cards with subtle depth and no glow */
 .statCard {
-  flex: 1 1 200px;
-  min-width: 200px;
+  flex: 1 1 220px;
+  min-width: 220px;
   background: linear-gradient(135deg, #0f62fe, #054bcf);
-  border-radius: 16px;
-  padding: 36px 24px;
+  border-radius: 18px;
+  padding: 40px 28px;
   color: white;
-  font-weight: 700;
-  font-size: 28px;
-  box-shadow: 0 12px 30px rgba(15, 98, 254, 0.45);
+  font-weight: 800;
+  font-size: 30px;
   text-align: center;
   user-select: none;
   cursor: default;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+  box-shadow: 0 3px 10px rgba(15, 98, 254, 0.25);
 }
 
 .statCard.green {
   background: linear-gradient(135deg, #198038, #136329);
-  box-shadow: 0 12px 30px rgba(25, 128, 56, 0.45);
+  box-shadow: 0 3px 10px rgba(25, 128, 56, 0.25);
 }
 
 .statCard.red {
   background: linear-gradient(135deg, #fa4d56, #a7281d);
-  box-shadow: 0 12px 30px rgba(250, 77, 86, 0.45);
+  box-shadow: 0 3px 10px rgba(250, 77, 86, 0.25);
 }
 
 .statCard:hover {
   transform: translateY(-10px);
+  box-shadow: 0 10px 24px rgba(15, 98, 254, 0.3);
 }
 
 .statCardTitle {
-  font-size: 16px;
-  font-weight: 600;
-  opacity: 0.85;
-  margin-bottom: 12px;
-  letter-spacing: 0.05em;
+  font-size: 18px;
+  font-weight: 700;
+  opacity: 0.9;
+  margin-bottom: 16px;
+  letter-spacing: 0.08em;
 }
 
-/* Chart Section */
+/* Chart section with soft color */
 .chartSection {
-  margin-bottom: 60px;
+  margin-bottom: 64px;
 }
 
 .chartTitle {
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 700;
-  margin-bottom: 22px;
+  margin-bottom: 28px;
   color: #33475b;
 }
 
-/* Featured Plans */
+/* Featured plans styling */
 .featuredPlansSection {
-  margin-bottom: 60px;
+  margin-bottom: 64px;
 }
 
 .featuredPlansTitle {
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 700;
   color: #33475b;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .plansList {
   display: flex;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .planCard {
-  flex: 1 1 320px;
-  background: #f9fafb;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
-  border-radius: 20px;
-  padding: 32px 24px 40px 24px;
+  flex: 1 1 340px;
+  background: #fefefe;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  border-radius: 24px;
+  padding: 36px 32px 44px 32px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: box-shadow 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   cursor: pointer;
 }
 
 .planCard:hover {
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px);
 }
 
 .planTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.65rem;
+  font-weight: 800;
   color: #0f62fe;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
+  user-select: none;
 }
 
 .planDetail {
   font-weight: 600;
-  color: #444c61;
-  margin-bottom: 10px;
-  font-size: 1.1rem;
+  color: #555c75;
+  margin-bottom: 14px;
+  font-size: 1.15rem;
+  user-select: none;
 }
 
 .subscribeButton {
   background-color: #0f62fe;
   color: white;
   font-weight: 700;
-  border-radius: 24px; /* slightly smaller radius for a subtle pill shape */
+  border-radius: 28px;
   border: none;
-  padding: 10px 20px; /* reduce padding */
-  font-size: 1rem; /* reduce font size */
-  margin-top: 20px;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-  box-shadow: 0 8px 20px rgba(15, 98, 254, 0.5);
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  margin-top: 25px;
   cursor: pointer;
   user-select: none;
-  align-self: flex-start; /* keeps the button left aligned in card */
+  align-self: flex-start;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.25s ease;
+  box-shadow: 0 6px 20px rgba(15, 98, 254, 0.3);
 }
 
 .subscribeButton:hover {
   background-color: #054bcf;
-  box-shadow: 0 10px 28px rgba(5, 75, 207, 0.7);
+  box-shadow: 0 8px 24px rgba(5, 75, 207, 0.4);
+  transform: translateY(-3px);
 }
 
-/* Donation History */
+/* Donation section */
 .donationHistorySection {
-  margin-top: 60px;
+  margin-top: 70px;
 }
 
 .donationHistoryTitle {
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   color: #33475b;
+  user-select: none;
 }
 
 .donationTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1rem;
-  color: #555;
+  font-size: 1.1rem;
+  color: #555b6e;
 }
 
 .donationTable th,
 .donationTable td {
   text-align: left;
-  padding: 14px 20px;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e6eaf0;
 }
 
 .donationTable th {
-  background-color: #f0f4f8;
+  background-color: #f7fafa;
   font-weight: 700;
-  color: #223258;
+  color: #32435f;
+  user-select: none;
 }
 
-/* FAQ Section */
+/* FAQ section */
 .faqSection {
-  margin-top: 60px;
+  margin-top: 70px;
 }
 
 .faqTitle {
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 700;
   color: #33475b;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  user-select: none;
 }
 
 .faqItem {
-  border-bottom: 1px solid #d9e2ec;
-  padding: 18px 0;
+  border-bottom: 1px solid #dce3ef;
+  padding: 20px 0;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.25s ease;
-  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  border-radius: 10px;
 }
 
 .faqItem:hover {
-  background-color: #f0f4f8;
+  background-color: #f7fafa;
 }
 
 .faqQuestion {
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.2rem;
   color: #0f62fe;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .faqAnswer {
-  font-size: 1rem;
-  color: #555d66;
-  margin-top: 10px;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  color: #545f6a;
+  margin-top: 14px;
+  line-height: 1.6;
 }
 
-/* Skeleton loaders */
+/* Skeleton loading animations */
 .skeleton {
-  background: linear-gradient(90deg, #e0e4eb 25%, #f1f3f7 37%, #e0e4eb 63%);
+  background: linear-gradient(90deg, #e6ebf3 25%, #f3f6f9 37%, #e6ebf3 63%);
   background-size: 400% 400%;
-  animation: shimmer 1.4s ease infinite;
-  border-radius: 12px;
+  animation: shimmer 1.6s ease infinite;
+  border-radius: 14px;
 }
 
 .skeletonText {
-  height: 20px;
+  height: 24px;
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .skeletonStatCard {
-  flex: 1 1 200px;
-  min-width: 200px;
-  height: 90px;
+  flex: 1 1 220px;
+  min-width: 220px;
+  height: 100px;
   margin-bottom: 0;
 }
 
 .skeletonPlanCard {
-  flex: 1 1 320px;
-  min-width: 320px;
-  height: 160px;
-  margin-bottom: 20px;
+  flex: 1 1 340px;
+  min-width: 340px;
+  height: 190px;
+  margin-bottom: 26px;
 }
 
 .skeletonTableRow {
-  height: 48px;
-  margin-bottom: 14px;
-  border-radius: 8px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 14px;
 }
 
 @keyframes shimmer {
   0% {
-    background-position: -400px 0;
+    background-position: -450px 0;
   }
   100% {
-    background-position: 400px 0;
+    background-position: 450px 0;
   }
 }

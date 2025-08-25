@@ -2,11 +2,12 @@ import React from "react";
 import { useGetPlansQuery } from "../../services/apiSlice";
 import { Link } from "react-router-dom";
 import styles from "../../style/PlansList.module.css"; // Create this CSS module
+import LottieLoader from "../../components/Lottie.loader";
 
 const PlansList = () => {
   const { data: plans = [], isLoading, error } = useGetPlansQuery();
 
-  if (isLoading) return <p>Loading plans...</p>;
+  if (isLoading) return <LottieLoader />;
   if (error) return <p>Error loading plans.</p>;
 
   return (

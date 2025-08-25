@@ -14,24 +14,46 @@ dotenv.config();
 
 const app = express();
 
+/**
+ * Enable Cross-Origin Resource Sharing for handling requests from different domains.
+ */
 app.use(cors());
+
+/**
+ * Parse incoming requests with JSON payloads.
+ */
 app.use(express.json());
 
+/**
+ * Mount API routes at `/api`.
+ */
 app.use("/api", routes);
 
-// Create ExpressAdapter instance
+/**
+ * Initialize and configure Bull board UI for managing job queues in the admin area.
+ */
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/admin/queues");
 
-// Create Bull Board passing queues and serverAdapter
-const bullBoard = createBullBoard({
+createBullBoard({
   queues: [new BullAdapter(notificationQueue)],
   serverAdapter: serverAdapter,
 });
 
+/**
+ * Mount Bull board dashboard UI for queue management.
+ */
 app.use("/admin/queues", serverAdapter.getRouter());
+
+/**
+ * Serve Swagger UI API documentation at `/api-docs`.
+ */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+/**
+ * Connect to MongoDB using URI from environment variables.
+ * Logs connection success or errors.
+ */
 mongoose
   .connect(process.env.MONGO_URI || "")
   .then(() => console.log("MongoDB connected"))

@@ -3,16 +3,17 @@ import { Plan } from "../plan/plan.schema";
 import { User } from "../users/user.schema";
 
 /**
- * Calculate total funds raised:
- * Sum actual amounts paid for active or cancelled subscriptions with payments made,
- * and group by plan for more granular detail.
+ * Calculate total funds raised by summing the amounts of active or cancelled subscriptions.
+ * Groups results by plan providing detailed breakdown per plan.
+ *
+ * @async
+ * @returns {Promise<Object>} Aggregated analytics object with:
+ *  - totalRaised: total amount raised across all plans (number)
+ *  - byPlan: array of objects with planId, planName, amountPerSubscription, totalRaisedByPlan, goalAmount
  */
 export async function getTotalFundsRaised() {
   const result = await Subscription.aggregate([
-    // Include active and cancelled (paid) subscriptions
     { $match: { status: { $in: ["active", "cancelled"] } } },
-
-    // Join with plan data
     {
       $lookup: {
         from: "plans",
@@ -22,8 +23,6 @@ export async function getTotalFundsRaised() {
       },
     },
     { $unwind: "$plan" },
-
-    // Group by plan and sum amounts individually
     {
       $group: {
         _id: "$plan._id",
@@ -35,7 +34,6 @@ export async function getTotalFundsRaised() {
     },
   ]);
 
-  // Also compute total raised from all plans combined:
   const totalRaised = result.reduce(
     (sum, plan) => sum + plan.totalRaisedByPlan,
     0
@@ -48,14 +46,20 @@ export async function getTotalFundsRaised() {
 }
 
 /**
- * Count of currently active funding plans.
+ * Counts the number of active funding plans.
+ *
+ * @async
+ * @returns {Promise<number>} Count of plans where `isActive` is true.
  */
 export async function getActiveFundingPlansCount() {
   return Plan.countDocuments({ isActive: true });
 }
 
 /**
- * Count distinct donors with subscriptions (active or cancelled).
+ * Counts the number of distinct donors who have active or cancelled subscriptions.
+ *
+ * @async
+ * @returns {Promise<number>} Number of unique user IDs with relevant subscriptions.
  */
 export async function getTotalDonorsCount() {
   return Subscription.distinct("userId", {
@@ -64,7 +68,15 @@ export async function getTotalDonorsCount() {
 }
 
 /**
- * Aggregated analytics for public dashboard or admin.
+ * Fetches aggregated analytics data for dashboard display.
+ * Combines totals for funds raised, active plans, and total donors.
+ *
+ * @async
+ * @returns {Promise<Object>} Analytics summary containing:
+ *  - totalFundsRaised {number}
+ *  - activeFundingPlans {number}
+ *  - totalDonors {number}
+ *  - fundsRaisedByPlan {Array<Object>}
  */
 export async function getPublicAnalytics() {
   const [fundsData, activePlans, donors] = await Promise.all([
@@ -82,7 +94,14 @@ export async function getPublicAnalytics() {
 }
 
 /**
- * Bonus: Get list of top donors by total amount donated.
+ * Gets the list of top donors sorted by total donated amount.
+ *
+ * @async
+ * @param {number} [limit=5] - Maximum number of top donors to retrieve.
+ * @returns {Promise<Array<Object>>} Array of objects containing:
+ *  - userId {ObjectId} donor's user ID
+ *  - totalDonated {number} total amount donated
+ *  - email {string} donor's email address
  */
 export async function getTopDonors(limit = 5) {
   const donorAggregates = await Subscription.aggregate([

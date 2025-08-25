@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useGetUserSubscriptionsQuery,
   useCancelSubscriptionMutation,
@@ -13,6 +13,8 @@ const SubscriptionListPage: React.FC<{ userId: string }> = ({ userId }) => {
   } = useGetUserSubscriptionsQuery(userId);
   const [cancelSubscription, { isLoading: isCanceling }] =
     useCancelSubscriptionMutation();
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
   if (isLoading)
     return <p className={styles.message}>Loading subscriptions...</p>;
@@ -22,34 +24,52 @@ const SubscriptionListPage: React.FC<{ userId: string }> = ({ userId }) => {
     return <p className={styles.message}>No active subscriptions found.</p>;
 
   const handleCancel = async (id: string) => {
-    if (window.confirm("Are you sure you want to cancel this subscription?")) {
-      try {
-        await cancelSubscription(id).unwrap();
-        alert("Subscription cancelled successfully.");
-      } catch {
-        alert("Failed to cancel subscription.");
-      }
+    if (!window.confirm("Are you sure you want to cancel this subscription?"))
+      return;
+    try {
+      await cancelSubscription(id).unwrap();
+      setFeedbackMessage("Subscription cancelled successfully.");
+    } catch {
+      setFeedbackMessage("Failed to cancel subscription.");
     }
+    setTimeout(() => setFeedbackMessage(null), 4000);
   };
 
   return (
     <section className={styles.container}>
       <h2 className={styles.title}>Your Subscriptions</h2>
-      <table className={styles.table} aria-label="User subscriptions table">
+      {feedbackMessage && <p className={styles.message}>{feedbackMessage}</p>}
+      <table
+        className={styles.table}
+        aria-label="User subscriptions table"
+        role="grid"
+      >
         <thead>
-          <tr>
-            <th>Plan</th>
-            <th>Status</th>
-            <th>Next Payment Date</th>
-            <th>Action</th>
+          <tr role="row">
+            <th role="columnheader">Plan</th>
+            <th role="columnheader">Status</th>
+            <th role="columnheader">Next Payment Date</th>
+            <th role="columnheader">Action</th>
           </tr>
         </thead>
         <tbody>
           {subscriptions.map((sub) => (
-            <tr key={sub._id} className={styles.row}>
-              <td>{sub.plan?.name || "Unknown Plan"}</td>
-
+            <tr
+              key={sub._id}
+              className={styles.row}
+              onMouseEnter={() => setHoveredRow(sub._id)}
+              onMouseLeave={() => setHoveredRow(null)}
+              tabIndex={0}
+              aria-selected={hoveredRow === sub._id}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && sub.status === "active") {
+                  handleCancel(sub._id);
+                }
+              }}
+            >
+              <td role="gridcell">{sub.plan?.name || "Unknown Plan"}</td>
               <td
+                role="gridcell"
                 className={
                   sub.status === "active"
                     ? styles.activeStatus
@@ -58,13 +78,16 @@ const SubscriptionListPage: React.FC<{ userId: string }> = ({ userId }) => {
               >
                 {sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}
               </td>
-              <td>{new Date(sub.nextPaymentDate).toLocaleDateString()}</td>
-              <td>
-                {sub.status === "active" && (
+              <td role="gridcell">
+                {new Date(sub.nextPaymentDate).toLocaleDateString()}
+              </td>
+              <td role="gridcell">
+                {sub.status === "active" && hoveredRow === sub._id && (
                   <button
                     className={styles.cancelButton}
                     onClick={() => handleCancel(sub._id)}
                     disabled={isCanceling}
+                    aria-label="Cancel subscription"
                   >
                     {isCanceling ? "Cancelling..." : "Cancel"}
                   </button>

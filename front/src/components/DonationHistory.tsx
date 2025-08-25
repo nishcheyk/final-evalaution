@@ -1,10 +1,11 @@
 import React from "react";
 import { useGetUserSubscriptionsQuery } from "../services/apiSlice";
+import LottieLoader from "./Lottie.loader";
 
 const DonationHistory: React.FC<{ userId: string }> = ({ userId }) => {
   const { data, error, isLoading } = useGetUserSubscriptionsQuery(userId);
 
-  if (isLoading) return <p>Loading your donation history...</p>;
+  if (isLoading) return <LottieLoader />;
   if (error) return <p>Error loading donation history.</p>;
 
   if (!data || data.length === 0) {

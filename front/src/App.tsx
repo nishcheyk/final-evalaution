@@ -1,31 +1,47 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { Suspense, lazy, useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "./store/store";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-
-import AdminLayout from "./layout/AdminLayout";
-import CreatePlan from "./pages/Admin/CreatePlan";
-import ManagePlans from "./pages/Admin/ManagePlan";
-
-import UserLayout from "./layout/UserLayout";
-import Dashboard from "./pages/Users/Dashboard";
-
-import PlansList from "./pages/Users/PlanList";
-import SubscribeToPlan from "./pages/Users/SubscribeToPlan";
-
-import SubscriptionListPage from "./pages/Users/SubscriptionListPage";
-import SubscribePage from "./pages/Users/SubscribePage";
+import { setCredentials } from "./store/authSlice";
 
 import { RequireAuth, RequireAdmin } from "./layout/AuthGuards";
 import GuestLayout from "./layout/GuestLayout";
+import AdminLayout from "./layout/AdminLayout";
+import UserLayout from "./layout/UserLayout";
+import LottieLoader from "./components/Lottie.loader";
+
+// Lazy-loaded pages
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const CreatePlan = lazy(() => import("./pages/Admin/CreatePlan"));
+const ManagePlans = lazy(() => import("./pages/Admin/ManagePlan"));
+const Dashboard = lazy(() => import("./pages/Users/Dashboard"));
+const PlansList = lazy(() => import("./pages/Users/PlanList"));
+const SubscribeToPlan = lazy(() => import("./pages/Users/SubscribeToPlan"));
+const SubscriptionListPage = lazy(
+  () => import("./pages/Users/SubscriptionListPage")
+);
+const SubscribePage = lazy(() => import("./pages/Users/SubscribePage"));
 
 const App = () => {
   const currentUser = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        dispatch(setCredentials(parsedUser));
+        if (parsedUser.role === "admin") navigate("/admin/create-plan");
+        else navigate("/user/dashboard");
+      }
+    }
+  }, [dispatch, currentUser, navigate]);
 
   return (
-    <BrowserRouter>
+    <Suspense fallback={<LottieLoader />}>
       <Routes>
         {/* Public guest layout */}
         <Route element={<GuestLayout />}>
@@ -61,7 +77,6 @@ const App = () => {
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
-
           <Route path="plans" element={<PlansList />} />
 
           {/* Subscription pages */}
@@ -84,7 +99,7 @@ const App = () => {
         {/* Catch all unknowns */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </Suspense>
   );
 };
 

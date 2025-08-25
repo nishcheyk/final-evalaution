@@ -17,6 +17,12 @@ const Login = () => {
   useEffect(() => {
     if (data) {
       dispatch(setCredentials({ ...data.user, token: data.token }));
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...data.user, token: data.token })
+      );
+      console.log(localStorage.getItem("user"));
       if (data.user.role === "admin") navigate("/admin/create-plan");
       else navigate("/user/dashboard");
     }
